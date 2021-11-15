@@ -30,67 +30,100 @@ def _print_and_run(cmd, *, dry_run):
 
 
 @click.command()
-@click.option('dry_run', '--dry-run', '-d',
-              help="Print commands, but don't actually delete anything.",
-              is_flag=True)
-@click.option('delete_inputs_by_pattern', '--delete-inputs-by-pattern', '-i',
-              help=(
-                  'Bash glob/brace pattern used to delete input datasources by'
-                  ' `<dataset_id>.<source_id>`'
-              ),
-              multiple=True)
-@click.option('delete_all_input', '--delete-all-input', '-I',
-              help=(
-                  'Delete _ALL_ input-cached layers, ignoring LAYER_ID_PATTERN'
-              ),
-              type=BOOLEAN_CHOICE, callback=validate_boolean_choice,
-              default='False', show_default=True)
-@click.option('delete_wips_by_pattern', '--delete-wips-by-pattern', '-w',
-              help=(
-                  'Pattern used to delete WIP layers by layer ID'
-              ), multiple=True)
-@click.option('delete_all_wip', '--delete-all-wip', '-W',
-              help=(
-                  'Delete _ALL_ WIP layers, ignoring LAYER_ID_PATTERN'
-              ),
-              type=BOOLEAN_CHOICE, callback=validate_boolean_choice,
-              default='False', show_default=True)
-@click.option('delete_compiled', '--delete-compiled', '-C',
-              help=(
-                  'Delete compiled (but not zipped) QGreenland datapackage'
-              ),
-              type=BOOLEAN_CHOICE, callback=validate_boolean_choice,
-              default='True', show_default=True)
+@click.option(
+    'dry_run', '--dry-run', '-d',
+    help='Print commands, but do not actually delete anything.',
+    is_flag=True,
+)
+@click.option(
+    'dev_run', '--dev', '-D',
+    help=(
+        'Run a dev cleanup. Includes all package releases, layer releases'
+        ' matching PATTERN,  package WIP, and layer WIPs matching PATTERN.'
+    ),
+    multiple=True,
+    metavar='PATTERN',
+)
+@click.option(
+    'delete_inputs_by_pattern', '--delete-inputs-by-pattern', '-i',
+    help=(
+        'Bash glob/brace pattern used to delete input datasources by'
+        ' `<dataset_id>.<source_id>`'
+    ),
+    multiple=True,
+    metavar='PATTERN',
+)
+@click.option(
+    'delete_all_input', '--delete-all-input', '-I',
+    help=(
+        'Delete _ALL_ input-cached layers, ignoring LAYER_ID_PATTERN'
+    ),
+    type=BOOLEAN_CHOICE, callback=validate_boolean_choice,
+    default='False', show_default=True,
+)
+@click.option(
+    'delete_wips_by_pattern', '--delete-wips-by-pattern', '-w',
+    help=(
+        'Pattern used to delete WIP layers by layer ID'
+    ),
+    multiple=True,
+    metavar='PATTERN',
+)
+@click.option(
+    'delete_all_wip', '--delete-all-wip', '-W',
+    help=(
+        'Delete _ALL_ WIP layers, ignoring LAYER_ID_PATTERN'
+    ),
+    type=BOOLEAN_CHOICE, callback=validate_boolean_choice,
+    default='False', show_default=True,
+)
+@click.option(
+    'delete_compiled', '--delete-compiled', '-C',
+    help=(
+        'Delete compiled (but not zipped) QGreenland datapackage'
+    ),
+    type=BOOLEAN_CHOICE, callback=validate_boolean_choice,
+    default='True', show_default=True,
+)
 # TODO: delete_all_dev_releases?
-@click.option('delete_all_release_packages',
-              '--delete-all-release-packages',
-              '-R',
-              help=(
-                  'Delete all released QGreenland packages'
-              ),
-              type=BOOLEAN_CHOICE, callback=validate_boolean_choice,
-              default='False', show_default=True)
-@click.option('delete_all_dev_release_packages',
-              '--delete-all-dev-release-packages',
-              '-r',
-              help=(
-                  'Delete all released dev QGreenland packages'
-              ),
-              type=BOOLEAN_CHOICE, callback=validate_boolean_choice,
-              default='False', show_default=True)
-@click.option('delete_release_layers_by_pattern',
-              '--delete-release-layers-by-pattern',
-              '-l',
-              help=(
-                  'Pattern used to delete released layers by layer ID'
-              ), multiple=True)
-@click.option('delete_all_release_layers', '--delete-all-release-layers',
-              '-L',
-              help=(
-                  'Delete all released QGreenland layers'
-              ),
-              type=BOOLEAN_CHOICE, callback=validate_boolean_choice,
-              default='False', show_default=True)
+@click.option(
+    'delete_all_release_packages', '--delete-all-release-packages', '-R',
+    help=(
+        'Delete all released QGreenland packages'
+    ),
+    type=BOOLEAN_CHOICE, callback=validate_boolean_choice,
+    default='False', show_default=True,
+)
+@click.option(
+    'delete_all_dev_release_packages',
+    '--delete-all-dev-release-packages',
+    '-r',
+    help=(
+        'Delete all released dev QGreenland packages'
+    ),
+    type=BOOLEAN_CHOICE, callback=validate_boolean_choice,
+    default='False', show_default=True,
+)
+@click.option(
+    'delete_release_layers_by_pattern',
+    '--delete-release-layers-by-pattern',
+    '-l',
+    help=(
+        'Pattern used to delete released layers by layer ID'
+    ),
+    multiple=True,
+    metavar='PATTERN',
+)
+@click.option(
+    'delete_all_release_layers',
+    '--delete-all-release-layers',
+    '-L',
+    help=(
+        'Delete all released QGreenland layers'
+    ),
+    type=BOOLEAN_CHOICE, callback=validate_boolean_choice,
+    default='False', show_default=True,
+)
 # NOTE: Complexity check (C901) is disabled because this function is just a big
 #       set of switches by design!
 def cleanup(**kwargs):  # noqa: C901
@@ -103,6 +136,10 @@ def cleanup(**kwargs):  # noqa: C901
     if kwargs['dry_run']:
         print('WARNING: In DRY RUN mode. Nothing will be deleted.')
         print()
+
+    if kwargs['dev_run']:
+        breakpoint()
+        return
 
     print_and_run = functools.partial(_print_and_run, dry_run=kwargs['dry_run'])
 

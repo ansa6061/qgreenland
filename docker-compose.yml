@@ -19,9 +19,12 @@ services:
       - ./data/private-archive:/private-archive:ro
       # Read-write storage
       - ./data/working-storage:/working-storage:rw
+      # Temporary storage
+      - /tmp_mnt:/qgr-tmp:rw
     environment:
+      - QGR_TMP_DIR=/qgr-tmp
+      - QGR_ENVIRONMENT=${ENVIRONMENT}
       - LUIGI_CONFIG_PARSER=toml
-      - ENVIRONMENT
       - EARTHDATA_USERNAME
       - EARTHDATA_PASSWORD
       # Set `export PYTHONBREAKPOINT=ipdb.set_trace` to use `ipdb` by default

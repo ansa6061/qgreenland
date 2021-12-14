@@ -1,7 +1,7 @@
 import os
 
 PROJECT = 'QGreenland'
-ENVIRONMENT = os.environ.get('ENVIRONMENT', 'dev')
+ENVIRONMENT = os.environ.get('QGR_ENVIRONMENT', 'dev')
 
 # In seconds. See
 # https://2.python-requests.org/en/master/user/quickstart/#timeouts

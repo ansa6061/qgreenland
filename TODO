@@ -1,6 +1,6 @@
-* Edit docker-compose:
-  * mount new temp location
-  * pass envvar to tell the app to use the temp location
++ Edit docker-compose:
+  + mount new temp location
+  + pass envvar to tell the app to use the temp location
 * Modify app
   * Look for envvar
   * If set, use the envvar dir as tempdir instead of the current tempdir.
